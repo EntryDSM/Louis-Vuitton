@@ -8,7 +8,9 @@ def register_extensions(flask_app: Flask):
     extensions.cors.init_app(flask_app)
     extensions.jwt.init_app(flask_app)
     extensions.validator.init_app(flask_app)
+
     extensions.swagger.init_app(flask_app)
+    extensions.swagger.template = flask_app.config['SWAGGER_TEMPLATE']
     extensions.db.init_app(flask_app)
 
 
@@ -38,5 +40,9 @@ def create_app(*config_cls) -> Flask:
 
     for config in config_cls:
         flask_app.config.from_object(config)
+
+    register_extensions(flask_app)
+    register_views(flask_app)
+    register_middlewares(flask_app)
 
     return flask_app

@@ -15,6 +15,31 @@ class Config:
         'threaded': True
     }
 
+    SWAGGER = {
+        'title': SERVICE_NAME,
+        'specs_route': os.getenv('SWAGGER_URI', '/docs'),
+        'uiversion': 3,
+
+        'info': {
+            'title': SERVICE_NAME + ' API',
+            'version': '1.0',
+            'description': ''
+        },
+        'basePath': '/'
+    }
+
+    SWAGGER_TEMPLATE = {
+        'schemes': [
+            'http'
+        ],
+        'tags': [
+            {
+                'name': '[Sample]',
+                'description': 'Sample API'
+            }
+        ]
+    }
+
 
 class DevConfig(Config):
     HOST = "localhost"
@@ -28,6 +53,8 @@ class DevConfig(Config):
     })
 
     SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:password@localhost:3306/{}".format(Config.SERVICE_NAME)
+
+    Config.SWAGGER['host'] = '{}:{}'.format(HOST, PORT)
 
 
 class ProductionConfig(Config):
@@ -43,6 +70,8 @@ class ProductionConfig(Config):
         'port': PORT,
         'debug': DEBUG
     })
+
+    Config.SWAGGER['host'] = '{}:{}'.format(HOST, PORT)
 
 
 class TestConfig(DevConfig):
