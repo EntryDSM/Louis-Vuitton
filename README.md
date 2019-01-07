@@ -1,8 +1,6 @@
 # Entry4.0-EntrySystem
 
 ## About this service
-
-## Technical Stack
 Entry4.0-EntrySystem 은 **2020학년도 대덕SW마이스터고등학교 입학전형**을 진행하는 서비스 입니다.
 
 이 서비스는 학생들이 입학 원서를 작성할 때 사용하는 서비스로, 원서 작성품 제공, 미리보기, 출력 기능을 주로 합니다.  
@@ -19,7 +17,7 @@ EntrySystem Backend 는 다음과 같은 페이지를 서빙합니다.
     6. 원서 미리보기
 4. 마이 페이지
 
-
+## Technical Stack
 
 ### Main Language & Framework
     - Python 
@@ -28,7 +26,7 @@ EntrySystem Backend 는 다음과 같은 페이지를 서빙합니다.
 ### WGSI
     - Gunicorn
 
-### Database
+### Databases
     - MySQL
     - Redis 
     
@@ -48,7 +46,7 @@ EntrySystem Backend 는 다음과 같은 페이지를 서빙합니다.
     - docker
     - docker registry
 
-### Test 
+### Testing
     - unittest
 
 
