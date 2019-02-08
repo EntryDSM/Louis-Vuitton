@@ -1,8 +1,11 @@
 class Type:
     name: str
 
+    def __init__(self, default):
+        self.default = default
+
     def __get__(self, instance, owner):
-        return instance.__dict__[self.name]
+        return instance.__dict__.get(self.name, self.default)
 
     def __set__(self, instance, value):
         instance.__dict__[self.name] = value
@@ -12,8 +15,9 @@ class Type:
 
 
 class Integer(Type):
-    def __init__(self, unsigned=False):
+    def __init__(self, unsigned=False, default=None):
         self.unsigned = unsigned
+        super().__init__(default)
 
     def __set__(self, instance, value):
         if not isinstance(value, int):
@@ -25,8 +29,9 @@ class Integer(Type):
 
 
 class Float(Type):
-    def __init__(self, unsigned=False):
+    def __init__(self, unsigned=False, default=None):
         self.unsigned = unsigned
+        super().__init__(default)
 
     def __set__(self, instance, value):
         if not isinstance(value, float):
@@ -57,3 +62,4 @@ class Enum(Type):
         if value not in self.keys:
             raise ValueError(f"Value '{value}' is not in enum key list {self.keys}")
         super().__set__(instance, value)
+
