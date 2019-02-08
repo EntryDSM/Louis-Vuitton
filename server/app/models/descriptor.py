@@ -17,6 +17,12 @@ class Type:
 class Integer(Type):
     def __init__(self, unsigned=False, default=None):
         self.unsigned = unsigned
+        if default:
+            if not isinstance(default, int):
+                raise ValueError("Wrong value for integer")
+            if self.unsigned:
+                if default < 0:
+                    raise ValueError("negative default value for unsigned type")
         super(Integer, self).__init__(default)
 
     def __set__(self, instance, value):
@@ -31,6 +37,12 @@ class Integer(Type):
 class Float(Type):
     def __init__(self, unsigned=False, default=None):
         self.unsigned = unsigned
+        if default:
+            if not isinstance(default, float):
+                raise ValueError("Wrong value for float")
+            if self.unsigned:
+                if default < 0:
+                    raise ValueError("Negative default value for unsigned type")
         super(Float, self).__init__(default)
 
     def __set__(self, instance, value):
@@ -43,8 +55,14 @@ class Float(Type):
 
 
 class String(Type):
-    def __init__(self, length=0):
-        self.length = 0
+    def __init__(self, length=0, default=None):
+        self.length = length
+        if default:
+            if not isinstance(default, str):
+                raise ValueError("Wrong value for string")
+            if self.length and (len(default) > self.length):
+                raise ValueError("Default value too long")
+        super(String, self).__init__(default)
 
     def __set__(self, instance, value):
         if not isinstance(value, str):
@@ -55,8 +73,11 @@ class String(Type):
 
 
 class Enum(Type):
-    def __init__(self, *args):
-        self.keys = args
+    def __init__(self, keys, default=None):
+        self.keys = keys
+        if default and default not in keys:
+            raise ValueError("Wrong default value for enum")
+        super(Enum, self).__init__(default)
 
     def __set__(self, instance, value):
         if value not in self.keys:
