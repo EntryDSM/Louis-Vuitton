@@ -19,18 +19,18 @@ class Integer(Type):
         self.unsigned = unsigned
         if default:
             if not isinstance(default, int):
-                raise ValueError("Wrong value for integer")
+                raise ValueError(f"int was expected for default but {type(default)} was given")
             if self.unsigned:
                 if default < 0:
-                    raise ValueError("negative default value for unsigned type")
+                    raise ValueError("expected positive for default but negative was given")
         super(Integer, self).__init__(default)
 
     def __set__(self, instance, value):
         if not isinstance(value, int):
-            raise ValueError("value is not int")
+            raise ValueError(f"int was expected but {type(value)} was given")
         if self.unsigned:
             if value < 0:
-                raise ValueError("negative value for unsigned type")
+                raise ValueError("expected positive but negative was given")
         super().__set__(instance, value)
 
 
@@ -39,18 +39,18 @@ class Float(Type):
         self.unsigned = unsigned
         if default:
             if not isinstance(default, float):
-                raise ValueError("Wrong value for float")
+                raise ValueError(f"int was expected for default but {type(default)} was given")
             if self.unsigned:
                 if default < 0:
-                    raise ValueError("Negative default value for unsigned type")
+                    raise ValueError("positive was expected but negative was given")
         super(Float, self).__init__(default)
 
     def __set__(self, instance, value):
         if not isinstance(value, float):
-            raise ValueError("value is not float")
+            raise ValueError(f"int was expected for default but {type(value)} was given")
         if self.unsigned:
             if value < 0:
-                raise ValueError("negative value for unsigned type")
+                raise ValueError("positive was expected but negative was given")
         super().__set__(instance, value)
 
 
@@ -59,16 +59,16 @@ class String(Type):
         self.length = length
         if default:
             if not isinstance(default, str):
-                raise ValueError("Wrong value for string")
+                raise ValueError(f"str was expected for default but {type(default)} was given")
             if self.length and (len(default) > self.length):
-                raise ValueError("Default value too long")
+                raise ValueError(f"maximum length is {self.length} but given string's length is {len(default)}")
         super(String, self).__init__(default)
 
     def __set__(self, instance, value):
         if not isinstance(value, str):
-            raise ValueError("value is not str")
+            raise ValueError(f"str was expected for default but {type(value)} was given")
         if self.length and (len(value) > self.length):
-            raise ValueError("value too long")
+            raise ValueError(f"maximum length is {self.length} but given string's length is {len(value)}")
         super().__set__(instance, value)
 
 
@@ -76,11 +76,11 @@ class Enum(Type):
     def __init__(self, keys, default=None):
         self.keys = keys
         if default and default not in keys:
-            raise ValueError("Wrong default value for enum")
+            raise ValueError(f"default value must be one of {self.keys} but '{default}' was given")
         super(Enum, self).__init__(default)
 
     def __set__(self, instance, value):
         if value not in self.keys:
-            raise ValueError(f"Value '{value}' is not in enum key list {self.keys}")
+            raise ValueError(f"value must be one of {self.keys} but '{value}' was given")
         super().__set__(instance, value)
 
