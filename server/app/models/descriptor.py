@@ -24,6 +24,19 @@ class Integer(Type):
         super().__set__(instance, value)
 
 
+class Float(Type):
+    def __init__(self, unsigned=False):
+        self.unsigned = unsigned
+
+    def __set__(self, instance, value):
+        if not isinstance(value, float):
+            raise ValueError("value is not float")
+        if self.unsigned:
+            if value < 0:
+                raise ValueError("negative value for unsigned type")
+        super().__set__(instance, value)
+
+
 class String(Type):
     def __init__(self, length=0):
         self.length = 0
