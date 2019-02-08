@@ -84,3 +84,15 @@ class Enum(Type):
             raise ValueError(f"value must be one of {self.keys} but '{value}' was given")
         super().__set__(instance, value)
 
+
+class A:
+    x = Float(unsigned=True, default=3.2)
+    y = Enum(keys=["asdf", "fdsa"])
+    z = String(length=3)
+
+
+if __name__ == "__main__":
+    z = A()
+    z.y = "asdf"
+    z.z = "asd"
+    print(z.x)
