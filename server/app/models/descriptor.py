@@ -17,7 +17,7 @@ class Type:
 class Integer(Type):
     def __init__(self, unsigned=False, default=None):
         self.unsigned = unsigned
-        super().__init__(default)
+        super(Integer, self).__init__(default)
 
     def __set__(self, instance, value):
         if not isinstance(value, int):
@@ -31,7 +31,7 @@ class Integer(Type):
 class Float(Type):
     def __init__(self, unsigned=False, default=None):
         self.unsigned = unsigned
-        super().__init__(default)
+        super(Float, self).__init__(default)
 
     def __set__(self, instance, value):
         if not isinstance(value, float):
