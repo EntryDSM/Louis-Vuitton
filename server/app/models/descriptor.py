@@ -85,4 +85,13 @@ class Enum(Type):
         super().__set__(instance, value)
 
 
+class Bool(Type):
+    def __init__(self, default=None):
+        if default:
+            if not isinstance(default, bool):
+                raise ValueError(f"bool was expected for default but {type(default)} was given")
+        super(Bool, self).__init__(default)
 
+    def __set__(self, instance, value):
+        if not isinstance(value, bool):
+            raise ValueError(f"bool was expected  but {type(value)} was given")
