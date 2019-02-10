@@ -119,3 +119,22 @@ class Applicant(BaseModel):
     image_path = String(256)
     created_at = TimeStamp(default=datetime.datetime.now)
     updated_at = TimeStamp(default=created_at)
+
+    def save(self):
+        query = f"""INSERT INTO {self.table_name} ( 
+                    email,
+                    password,
+                    applicant_name,
+                    sex,
+                    birth_date,
+                    parent_tel,
+                    applicant_tel,
+                    address,
+                    post_code,
+                    image_path,
+                    created_at,
+                    updated_at
+                    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+        MySQLConnection.execute(query, self.email, self.password, self.applicant_name, self.sex,
+                                self.birth_date, self.parent_tel, self.applicant_tel, self.address, self.post_code,
+                                self.image_path, self.created_at, self.updated_at)
