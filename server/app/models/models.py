@@ -79,3 +79,43 @@ class Admin(BaseModel):
                                 self.admin_type, self.admin_email, self.admin_name,
                                 self.created_at, self.updated_at)
 
+
+class Applicant(BaseModel):
+    table_name = "applicant"
+    indexes = {}
+    table_creation_statement = """
+        create table applicant
+            (
+              email          varchar(320)                        not null
+                primary key,
+              password       varchar(320)                        not null,
+              applicant_name varchar(13)                         null,
+              sex            enum ('MALE', 'FEMALE')             null,
+              birth_date     date                                null,
+              parent_name    varchar(13)                         null,
+              parent_tel     varchar(12)                         null,
+              applicant_tel  varchar(12)                         null,
+              address        varchar(500)                        null,
+              post_code      varchar(5)                          null,
+              image_path     varchar(256)                        null,
+              created_at     timestamp default CURRENT_TIMESTAMP not null,
+              updated_at     timestamp default CURRENT_TIMESTAMP not null,
+              constraint applicant_tel_UNIQUE
+              unique (applicant_tel),
+              constraint image_path_UNIQUE
+              unique (image_path)
+            ) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ;
+    """
+
+    email = Email()
+    password = Password()
+    applicant_name = String(length=13)
+    sex = SexEnum()
+    birth_date = Date()
+    parent_tel = PhoneNumber()
+    applicant_tel = PhoneNumber()
+    address = String(500)
+    post_code = String(5, regex=r"[0-9]{5}")
+    image_path = String(256)
+    created_at = TimeStamp(default=datetime.datetime.now)
+    updated_at = TimeStamp(default=created_at)
