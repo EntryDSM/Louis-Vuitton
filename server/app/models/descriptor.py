@@ -144,3 +144,45 @@ class Email(String):
         if not validate_email(value, check_mx=True):
             raise ValueError(f"given email's domain does not exist")
         super(String, self).__set__(instance, value)
+
+
+class AdminEnum(Enum):
+    def __init__(self):
+        keys = ('ROOT', 'ADMIN', 'INTERVIEW')
+        super(AdminEnum, self).__init__(keys)
+
+
+class SexEnum(Enum):
+    def __init__(self):
+        keys = ('MALE', 'FEMALE')
+        super(SexEnum, self).__init__(keys)
+
+
+class ApplyEnum(Enum):
+    def __init__(self):
+        keys = ('COMMON', 'MEISTER', 'SOCIAL')
+        super(ApplyEnum, self).__init__(keys)
+
+
+class AdditionalEnum(Enum):
+    def __init__(self):
+        keys = ('NATIONAL_MERIT', 'SPECIAL_ADMISSION')
+        super(AdditionalEnum, self).__init__(keys)
+
+
+class SocialDetailEnum(Enum):
+    def __init__(self):
+        keys = ('ONE_PARENT', 'FROM_NORTH', 'MULTICULTUAL_FAMILY', 'INCOME_LEVEL_1', 'INCOME_LEVEL_2', 'INCOME_LEVEL_3', 'ETC')
+        super(SocialDetailEnum, self).__init__(keys)
+
+
+class SubjectEnum(Enum):
+    def __init__(self):
+        keys = ('KOREAN', 'MATH', 'SOCIAL', 'SCIENCE', 'ENGLISH', 'HISTORY', 'TECH_HOME')
+        super(SubjectEnum, self).__init__(keys)
+
+
+class ScoreEnum(Enum):
+    def __init__(self):
+        keys = ('A', 'B', 'C', 'D', 'E', 'X')
+        super(ScoreEnum, self).__init__(keys)
