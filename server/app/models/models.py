@@ -138,3 +138,35 @@ class Applicant(BaseModel):
         MySQLConnection.execute(query, self.email, self.password, self.applicant_name, self.sex,
                                 self.birth_date, self.parent_tel, self.applicant_tel, self.address, self.post_code,
                                 self.image_path, self.created_at, self.updated_at)
+
+
+class ApplicantDocument(BaseModel):
+    pass
+
+
+class ApplicantScore(BaseModel):
+    pass
+
+
+class ApplicantStatus(BaseModel):
+    pass
+
+
+class Classification(BaseModel):
+    pass
+
+
+class GradeBySemester(BaseModel):
+    pass
+
+
+class School(BaseModel):
+    pass
+
+
+class AcademicInformation(BaseModel):
+    pass
+
+
+class UnauthorizedApplicant(BaseModel):
+    pass
