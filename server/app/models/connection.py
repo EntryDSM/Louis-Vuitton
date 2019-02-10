@@ -51,6 +51,7 @@ class MySQLConnection:
 
         with cls.connection.cursor(pymysql.cursors.DictCursor) as cursor:
             cursor.execute(query, args)
+            cls.connection.commit()
             return cursor.fetchall()
 
     @classmethod
@@ -59,5 +60,6 @@ class MySQLConnection:
 
         with cls.connection.cursor(pymysql.cursors.DictCursor) as cursor:
             cursor.execute(query, args)
+            cls.connection.commit()
             return cursor.fetchone()
 
