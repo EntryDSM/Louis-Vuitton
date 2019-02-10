@@ -72,9 +72,9 @@ class String(Type):
                 raise ValueError(f"str was expected for default but {type(default)} was given")
             if self.length and (len(default) > self.length):
                 raise ValueError(f"maximum length is {self.length} but given string's length is {len(default)}")
-        if self.regex:
-            if not re.match(regex, default):
-                raise ValueError("given string is not matched with regex")
+            if self.regex:
+                if not re.match(regex, default):
+                    raise ValueError("given string is not matched with regex")
 
         super(String, self).__init__(default)
 
