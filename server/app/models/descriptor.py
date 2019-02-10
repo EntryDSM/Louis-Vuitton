@@ -1,3 +1,6 @@
+import datetime
+
+
 class Type:
     name: str
 
@@ -95,3 +98,18 @@ class Bool(Type):
     def __set__(self, instance, value):
         if not isinstance(value, bool):
             raise ValueError(f"bool was expected  but {type(value)} was given")
+
+class TimeStamp(Type):
+    def __init__(self, default=None):
+        if default:
+            if not isinstance(default, datetime.datetime):
+                raise ValueError(f"datetime was expected for default but {type(default)} was given")
+            if callable(default):
+                default = default()
+        super(TimeStamp, self).__init__(default)
+
+    def __set__(self, instance, value):
+        if not isinstance(value, datetime.datetime):
+            raise ValueError(f"datetime was expected but {type(value)} was given")
+        super(TimeStamp, self).__set__(instance, value)
+
