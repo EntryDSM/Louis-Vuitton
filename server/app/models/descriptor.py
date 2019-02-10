@@ -228,3 +228,20 @@ class Password(Type):
         hashed_pw = generate_password_hash(value)
         super(Password, self).__set__(instance, hashed_pw)
 
+
+class PhoneNumber(Type):
+    def __set__(self, instance, value):
+        if not isinstance(value, str):
+            raise ValueError(f"str was expected for default but {type(value)} was given")
+        if not re.match(r"01[0-9]-[0-9]{3,4}-[0-9]{4}", value):
+            if not re.match(r"0[0-9]{1,2}-[0-9]{3,4}-[0-9]{4}", value):
+                raise ValueError("given string is not valid phone number")
+        super(PhoneNumber, self).__set__(instance, value)
+
+
+if __name__ == "__main__":
+    class A:
+        x = UUID()
+
+    a = A()
+    print(type(a.x))
