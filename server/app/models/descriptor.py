@@ -63,13 +63,19 @@ class Float(Type):
 
 
 class String(Type):
-    def __init__(self, length=0, default=None):
+    def __init__(self, length=0, default=None, regex=None):
         self.length = length
+        self.regex = regex
+
         if default:
             if not isinstance(default, str):
                 raise ValueError(f"str was expected for default but {type(default)} was given")
             if self.length and (len(default) > self.length):
                 raise ValueError(f"maximum length is {self.length} but given string's length is {len(default)}")
+        if self.regex:
+            if not re.match(regex, default):
+                raise ValueError("given string is not matched with regex")
+
         super(String, self).__init__(default)
 
     def __set__(self, instance, value):
@@ -77,6 +83,10 @@ class String(Type):
             raise ValueError(f"str was expected for default but {type(value)} was given")
         if self.length and (len(value) > self.length):
             raise ValueError(f"maximum length is {self.length} but given string's length is {len(value)}")
+        if self.regex:
+            if not re.match(self.regex, value):
+                raise ValueError("given string is not matched with regex")
+
         super(String, self).__set__(instance, value)
 
 
@@ -155,7 +165,7 @@ class UUID(Type):
         uuid_string = super(UUID, self).__get__(instance, owner)
         return uuid.UUID(uuid_string)
 
-        
+
 class Email(String):
     def __set__(self, instance, value):
         if not isinstance(value, str):
