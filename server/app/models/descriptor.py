@@ -34,7 +34,7 @@ class Integer(Type):
         if self.unsigned:
             if value < 0:
                 raise ValueError("expected positive but negative was given")
-        super().__set__(instance, value)
+        super(Integer, self).__set__(instance, value)
 
 
 class Float(Type):
@@ -54,7 +54,7 @@ class Float(Type):
         if self.unsigned:
             if value < 0:
                 raise ValueError("positive was expected but negative was given")
-        super().__set__(instance, value)
+        super(Float, self).__set__(instance, value)
 
 
 class String(Type):
@@ -72,7 +72,7 @@ class String(Type):
             raise ValueError(f"str was expected for default but {type(value)} was given")
         if self.length and (len(value) > self.length):
             raise ValueError(f"maximum length is {self.length} but given string's length is {len(value)}")
-        super().__set__(instance, value)
+        super(String, self).__set__(instance, value)
 
 
 class Enum(Type):
@@ -85,7 +85,7 @@ class Enum(Type):
     def __set__(self, instance, value):
         if value not in self.keys:
             raise ValueError(f"value must be one of {self.keys} but '{value}' was given")
-        super().__set__(instance, value)
+        super(Enum, self).__set__(instance, value)
 
 
 class Bool(Type):
@@ -98,6 +98,8 @@ class Bool(Type):
     def __set__(self, instance, value):
         if not isinstance(value, bool):
             raise ValueError(f"bool was expected  but {type(value)} was given")
+        super(Bool, self).__set__(instance, value)
+
 
 class TimeStamp(Type):
     def __init__(self, default=None):
