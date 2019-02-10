@@ -1,13 +1,15 @@
 import re
 import datetime
+import uuid
 
 from validate_email import validate_email
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class Type:
     name: str
 
-    def __init__(self, default):
+    def __init__(self, default=None):
         self.default = default
 
     def __get__(self, instance, owner):
@@ -133,6 +135,27 @@ class Date(Type):
             raise ValueError(f"date was expected but {type(value)} was given")
 
 
+class UUID(Type):
+    def __init__(self):
+        super(UUID, self).__init__(default=uuid.uuid4().hex)
+
+    def __set__(self, instance, value):
+        if isinstance(value, uuid.UUID):
+            super(UUID, self).__set__(instance, value.hex)
+        if isinstance(value, str):
+            try:
+                value = uuid.UUID(value)
+            except Exception as e:
+                raise ValueError("given value is not valid UUID string")
+            super(UUID, self).__set__(instance, value.hex)
+        else:
+            raise ValueError("given value is not neither UUID string nor object")
+
+    def __get__(self, instance, owner):
+        uuid_string = super(UUID, self).__get__(instance, owner)
+        return uuid.UUID(uuid_string)
+
+        
 class Email(String):
     def __set__(self, instance, value):
         if not isinstance(value, str):
