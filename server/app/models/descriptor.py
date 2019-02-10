@@ -1,4 +1,7 @@
+import re
 import datetime
+
+from validate_email import validate_email
 
 
 class Type:
@@ -128,3 +131,16 @@ class Date(Type):
     def __set__(self, instance, value):
         if not isinstance(value, datetime.date):
             raise ValueError(f"date was expected but {type(value)} was given")
+
+
+class Email(String):
+    def __set__(self, instance, value):
+        if not isinstance(value, str):
+            raise ValueError(f"str was expected for default but {type(value)} was given")
+        if self.length and (len(value) > self.length):
+            raise ValueError(f"maximum length is {self.length} but given string's length is {len(value)}")
+        if not re.match(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", value):
+            raise ValueError(f"given string is not valid email address")
+        if not validate_email(value, check_mx=True):
+            raise ValueError(f"given email's domain does not exist")
+        super(String, self).__set__(instance, value)
