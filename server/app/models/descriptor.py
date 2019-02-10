@@ -113,3 +113,16 @@ class TimeStamp(Type):
             raise ValueError(f"datetime was expected but {type(value)} was given")
         super(TimeStamp, self).__set__(instance, value)
 
+
+class Date(Type):
+    def __init__(self, default=None):
+        if default:
+            if not isinstance(default, datetime.date):
+                raise ValueError(f"date was expected for default but {type(default)} was given")
+            if callable(default):
+                default = default()
+            super(Date, self).__init__(default)
+
+    def __set__(self, instance, value):
+        if not isinstance(value, datetime.date):
+            raise ValueError(f"date was expected but {type(value)} was given")
