@@ -43,7 +43,7 @@ class Admin(BaseModel):
               admin_name     varchar(13)                                  not null,
               created_at     timestamp default CURRENT_TIMESTAMP          not null,
               updated_at     timestamp default CURRENT_TIMESTAMP          not null
-            );
+            ) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ;
     """
 
     admin_id = UUID()
