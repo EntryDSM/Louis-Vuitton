@@ -186,3 +186,12 @@ class ScoreEnum(Enum):
     def __init__(self):
         keys = ('A', 'B', 'C', 'D', 'E', 'X')
         super(ScoreEnum, self).__init__(keys)
+
+
+class Password(Type):
+    def __set__(self, instance, value):
+        if not isinstance(value, str):
+            raise ValueError(f"str was expected for default but {type(value)} was given")
+        hashed_pw = generate_password_hash(value)
+        super(Password, self).__set__(instance, hashed_pw)
+
