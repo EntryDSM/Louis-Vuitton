@@ -8,9 +8,12 @@ class BaseModel:
     table_name: str
     indexes: Dict[str, Union[str, Tuple]]
 
+    table_creation_statement: str
+
     @classmethod
     def create_table(cls):
-        pass
+        MySQLConnection.execute(cls.table_creation_statement)
+        cls.create_table_index()
 
     @classmethod
     def create_table_index(cls):
