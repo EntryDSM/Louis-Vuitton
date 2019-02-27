@@ -79,6 +79,27 @@ class Admin(BaseModel):
                                 self.admin_type, self.admin_email, self.admin_name,
                                 self.created_at, self.updated_at)
 
+    @classmethod
+    def query_admin_by_email(cls, email: str) -> "Admin":
+        result: Dict[str, Union[str, datetime.datetime]]
+
+        query = f"""
+                SELECT *
+                FROM {cls.table_name}
+                WHERE admin_email = %s
+                """
+
+        result = MySQLConnection.fetch(query, email)
+        return Admin(**result) if result else None
+
+    @classmethod
+    def get_admin_type(cls):
+        pass
+
+    @classmethod
+    def perform_login(cls):
+        pass
+
 
 class Applicant(BaseModel):
     table_name = "applicant"
