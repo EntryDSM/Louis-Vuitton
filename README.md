@@ -23,7 +23,7 @@ EntrySystem Backend 는 다음과 같은 페이지를 서빙합니다.
     - Python 
     - Flask
 
-### WGSI
+### WSGI
     - Gunicorn
 
 ### Databases
@@ -49,8 +49,8 @@ EntrySystem Backend 는 다음과 같은 페이지를 서빙합니다.
 ### Testing
     - unittest
 
-
 ### Infra Stack
     - AWS EC2
     - Nginx
     - Route53
+    - Hashicorp Vault
