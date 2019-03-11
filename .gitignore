@@ -110,6 +110,9 @@ modules.xml
 .idea/misc.xml
 *.ipr
 
+# Sonarlint plugin
+ .idea/sonarlint
+
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -133,6 +136,7 @@ parts/
 sdist/
 var/
 wheels/
+pip-wheel-metadata/
 share/python-wheels/
 *.egg-info/
 .installed.cfg
