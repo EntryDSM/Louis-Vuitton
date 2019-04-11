@@ -11,8 +11,19 @@
 - 자기소개서 & 학업계획서
 - 원서 미리보기 (위에서 기입한 모든 정보 미리보기)
 
+## LV 의 코드 스타일은 다음을 따릅니다.
+[Rainist Python Style Guide](https://github.com/Rainist/styleguide/tree/master/python) 
+
 ## How to run LV
-``To do``
+```
+make init
+python3 -m lv
+```
+
+## How to run Test code
+```
+make test
+``
 
 ## API Documentation
 ``To do``
