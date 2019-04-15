@@ -15,7 +15,7 @@ class Config:
 
     HERMES_HOST: str = 'localhost:8888'
 
-    SERVICE_NAME: str = 'entry_lv'
+    SERVICE_NAME: str = 'louis-vuitton'
     DEBUG: bool = True
     TESTING: bool = False
 
