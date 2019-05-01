@@ -11,8 +11,7 @@ def create_vault_client() -> hvac.Client:
     client = hvac.Client(url=VAULT_HOST)
     client.auth.github.login(
         token=os.getenv(
-            'VAULT_TOKEN',
-            'bd2931ef81bec06af79d94c4e50e01e571efee7d',
+            'VAULT_TOKEN'
         )
     )
 
@@ -29,7 +28,6 @@ def get_db_credential_url(env: str) -> str:
 
 def get_secret_value_url(env: str) -> str:
     env = 'prod' if env == 'production' else 'test'
-    print(VAULT_SECRET_CONFIG_STORAGE.format(env))
     return VAULT_SECRET_CONFIG_STORAGE.format(env)
 
 
