@@ -1,7 +1,7 @@
 from sanic import Sanic
 from sanic.config import Config
 
-from ..data.db import MySQLClient
+from ..data.db.mysql import MySQLClient
 
 
 LISTENER_TYPE = (
@@ -18,6 +18,7 @@ def generate_db_config(config: Config) -> dict:
         'db': config.DATABASE_NAME,
         'host': config.DATABASE_HOST,
         'password': config.DATABASE_PASSWORD,
+        'autocommit': True,
     }
 
 

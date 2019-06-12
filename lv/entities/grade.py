@@ -44,4 +44,3 @@ class DiligenceGrade:
     period_cut_count: Optional[int]
     late_count: Optional[int]
     early_leave_count: Optional[int]
-
