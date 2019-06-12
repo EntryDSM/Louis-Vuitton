@@ -4,7 +4,7 @@ from sqlalchemy.dialects.mysql import DOUBLE as Double
 from ..models import metadata
 
 
-applicant_score = Table(
+applicant_score_tbl = Table(
     'applicant_score',
     metadata,
     Column('applicant_email', String(320), primary_key=True),

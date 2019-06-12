@@ -3,7 +3,7 @@ from sqlalchemy import Column, Table, String
 from ..models import metadata
 
 
-school = Table(
+school_tbl = Table(
     'school',
     metadata,
     Column('code', String(10), primary_key=True),

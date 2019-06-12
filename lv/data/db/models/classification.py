@@ -20,13 +20,13 @@ class SocialDetailTypeChoice(enum.Enum):
     ONE_PARENT = 1
     FROM_NORTH = 2
     MULTICULTURAL_FAMILY = 3
-    INCOME_LEVEL_1 = 4
-    INCOME_LEVEL_2 = 5
-    INCOME_LEVEL_3 = 6
+    INCOME_LEVEL_BASE = 4
+    INCOME_LEVEL_SECOND = 5
+    INCOME_LEVEL_THIRD = 6
     ETC = 7
 
 
-classification = Table(
+classification_tbl = Table(
     'classification',
     metadata,
     Column('applicant_email', String(320), primary_key=True),

@@ -25,7 +25,7 @@ class ScoreChoice(enum.Enum):
     X = 6
 
 
-grade_by_semester = Table(
+grade_by_semester_tbl = Table(
     'grade_by_semester',
     metadata,
     Column('applicant_email', String(320), primary_key=True),

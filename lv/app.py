@@ -9,6 +9,10 @@ from lv.conf import (
     Testing,
 )
 from lv.vault import get_config
+from lv.presentation.middlewares import (
+    init_data_clients,
+    LISTENER_TYPE,
+)
 
 
 def init_config(env: str) -> Config:
@@ -31,8 +35,9 @@ def check_env_type(config: Config):
 
 
 def create_app() -> Sanic:
-    app_ = Sanic(__name__)
+    _app = Sanic(__name__)
 
-    app_.config.from_object(init_config(os.getenv('RUN_ENV', 'default')))
+    _app.config.from_object(init_config(os.getenv('RUN_ENV', 'default')))
+    _app.register_listener(init_data_clients, LISTENER_TYPE[0])
 
-    return app_
+    return _app

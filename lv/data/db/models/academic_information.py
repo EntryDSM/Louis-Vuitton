@@ -3,7 +3,7 @@ from sqlalchemy import Column, ForeignKey, String, Table
 from ..models import metadata
 
 
-academic_information = Table(
+academic_information_tbl = Table(
     'academic_information',
     metadata,
     Column('applicant_email', String(320), primary_key=True),

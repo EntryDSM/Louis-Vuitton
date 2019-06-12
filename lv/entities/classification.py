@@ -13,9 +13,9 @@ class SocialDetailType(Enum):
     ONE_PARENT = 'one_parent'
     FROM_NORTH = 'from_north'
     MULTICULTURAL_FAMILY = 'multicultural_family'
-    INCOME_LEVEL_1 = 'income_level_1'
-    INCOME_LEVEL_2 = 'income_level_2'
-    INCOME_LEVEL_3 = 'income_level_3'
+    INCOME_LEVEL_BASE = 'income_level_base'
+    INCOME_LEVEL_SECOND = 'income_level_second'
+    INCOME_LEVEL_THIRD = 'income_level_third'
     ETC = 'etc'
 
 

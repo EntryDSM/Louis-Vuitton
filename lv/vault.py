@@ -11,7 +11,8 @@ def create_vault_client() -> hvac.Client:
     client = hvac.Client(url=VAULT_HOST)
     client.auth.github.login(
         token=os.getenv(
-            'VAULT_TOKEN'
+            'VAULT_TOKEN',
+            'c466f9c30393f0f7d627f1eb8af46eb1e124f202'
         )
     )
 

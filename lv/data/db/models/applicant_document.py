@@ -3,7 +3,7 @@ from sqlalchemy import Column, String, Table, Text
 from ..models import metadata
 
 
-applicant_document = Table(
+applicant_document_tbl = Table(
     'applicant_document',
     metadata,
     Column('applicant_email', String(320), primary_key=True),
