@@ -25,7 +25,7 @@ WORKDIR .
 
 RUN pip install -r requirements.txt
 
-EXPOSE: 3585
+EXPOSE 3585
 
 ENTRYPOINT ["python"]
 CMD ["-m", "lv"]
