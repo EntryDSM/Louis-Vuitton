@@ -9,6 +9,7 @@ from lv.conf import (
     Testing,
 )
 from lv.vault import get_config
+from lv.presentation import init_router
 from lv.presentation.middlewares import (
     init_data_clients,
     LISTENER_TYPE,
@@ -39,5 +40,6 @@ def create_app() -> Sanic:
 
     _app.config.from_object(init_config(os.getenv('RUN_ENV', 'default')))
     _app.register_listener(init_data_clients, LISTENER_TYPE[0])
+    init_router(_app)
 
     return _app
