@@ -1,0 +1,32 @@
+dist: xenial
+language: python
+
+services:
+  - mysql
+  - docker
+
+python:
+  - "3.7"
+
+install:
+  - pip install -r requirements.txt
+  - pip install -r requirements-dev.txt
+
+script:
+  make test
+
+after_success:
+  - codecov
+
+deploy:
+  - provider: script
+    script: bash ./deploy.sh master
+    skip_cleanup: true
+    on:
+      branch: master
+
+  - provider: script
+    script: bash ./deploy.sh dev
+    skip_cleanup: true
+    on:
+      branch: dev

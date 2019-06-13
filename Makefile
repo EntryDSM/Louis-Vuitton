@@ -10,5 +10,4 @@ check:
 
 test:
 	make check
-	python -m pytest
-
+	pytest --cov=./lv ./tests

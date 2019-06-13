@@ -1,5 +1,9 @@
 # Louis-Vuitton 
 
+
+[![Build Status](https://travis-ci.org/EntryDSM/Louis-Vuitton.svg?branch=dev)](https://travis-ci.org/EntryDSM/Louis-Vuitton)
+[![codecov](https://codecov.io/gh/EntryDSM/Louis-Vuitton/branch/dev/graph/badge.svg)](https://codecov.io/gh/EntryDSM/Louis-Vuitton)
+
 <img src="https://user-images.githubusercontent.com/30175266/54128132-bec17c80-444e-11e9-8e43-e5060ab87b48.png" width="30%"></img>
 
 **Louis Vuitton 은 원서 접수를 담당하는 서버입니다.**
