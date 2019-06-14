@@ -6,10 +6,10 @@ bp_classification = Blueprint("classification")
 
 
 @bp_classification.get('/classification')
-async def get_applicant_classification(request: Request):
+async def get_applicant_classification(_: Request):
     pass
 
 
 @bp_classification.patch('/classification')
-async def patch_applicant_classification(request: Request):
+async def patch_applicant_classification(_: Request):
     pass

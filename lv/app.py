@@ -45,7 +45,7 @@ def create_app() -> Sanic:
     # _app.blueprint(api)
 
     @_app.get('/')
-    async def fake(_: Request):
+    async def _(_: Request):
         return text('ping')
 
     return _app
