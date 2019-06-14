@@ -21,7 +21,7 @@ def create_vault_client() -> hvac.Client:
 def get_db_credential_url(env: str) -> str:
     if env == 'production':
 
-        return VAULT_DB_CONFIG_STORAGE
+        return VAULT_DB_CONFIG_STORAGE + 'prod'
 
     return VAULT_DB_CONFIG_STORAGE + '-test'
 

@@ -1,15 +1,7 @@
-from sanic import Sanic, Blueprint
-from sanic.request import Request
-from sanic.response import text
+from sanic import Blueprint
+
+from .classification import bp_classification
 
 
-def init_router(app: Sanic) -> None:
-    app.blueprint(bp)
-
-
-bp = Blueprint('fake')
-
-
-@bp.get('/')
-async def fake(_: Request):
-    return text('ping')
+# 모든 요청에 대해 에르스에다가 user_id 를 가지고 status - final_submit 이 false 인지를 검사하는 데코레이터
+api = Blueprint.group(bp_classification, url_prefix="/applicant/<user_id>")

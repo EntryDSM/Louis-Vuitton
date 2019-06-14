@@ -22,7 +22,7 @@ RUN apk add --no-cache \
         libressl-dev \
         libffi-dev
 
-EXPOSE 3585
+EXPOSE 80
 
 ENTRYPOINT ["python"]
 CMD ["-m", "lv"]
