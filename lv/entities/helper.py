@@ -1,8 +1,7 @@
-from typing import Any, Dict, List, Type, TypeVar
+from typing import Any, Dict, List, Type, TypeVar, Optional
 from dataclasses import asdict
 
 import dacite
-from dacite.exceptions import DaciteFieldError
 
 from lv.entities.classification import Classification
 from lv.entities.grade import ScoreGrade
@@ -12,6 +11,7 @@ from lv.entities.constant import (
     ALLOWABLE_SCORE_TYPES,
     ALLOWABLE_SOCIAL_DETAIL_TYPES,
 )
+from lv.exceptions.service import NotAllowedValueException
 
 T = TypeVar("T")
 
@@ -31,7 +31,12 @@ def from_dict(data_class: Type[T], data: Dict[str, Any]) -> T:
     return entity
 
 
-def _enum_validate(target: str, allowable_list: List[str]) -> bool:
+def _enum_validate(
+    target: Optional[str], allowable_list: List[str], nullable: bool=False
+) -> bool:
+    if target is None:
+        return True if nullable else False
+
     return target in allowable_list
 
 
@@ -40,10 +45,10 @@ def _classification_from_dict(entity: Classification) -> None:
         entity.apply_type, ALLOWABLE_APPLY_TYPES
     )
     is_allowed_social_detail_type = _enum_validate(
-        entity.social_detail_type, ALLOWABLE_SOCIAL_DETAIL_TYPES.append(None)
+        entity.social_detail_type, ALLOWABLE_SOCIAL_DETAIL_TYPES, nullable=True
     )
     is_allowed_additional_type = _enum_validate(
-        entity.additional_type, ALLOWABLE_ADDITIONAL_TYPES.append(None)
+        entity.additional_type, ALLOWABLE_ADDITIONAL_TYPES, nullable=True
     )
 
     if not (
@@ -53,11 +58,11 @@ def _classification_from_dict(entity: Classification) -> None:
         and
         is_allowed_additional_type
     ):
-        raise DaciteFieldError
+        raise NotAllowedValueException
 
 
 def _score_grade_from_dict(entity: ScoreGrade) -> None:
     for subject in entity.subject_score:
         for score in asdict(subject).values():
-            if _enum_validate(score, ALLOWABLE_SCORE_TYPES):
-                raise DaciteFieldError
+            if not _enum_validate(score, ALLOWABLE_SCORE_TYPES):
+                raise NotAllowedValueException
