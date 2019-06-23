@@ -1,26 +1,16 @@
-from enum import Enum
 from dataclasses import dataclass
 from typing import Optional, List
 
 
-class ScoreType(Enum):
-    A = 'A'
-    B = 'B'
-    C = 'C'
-    D = 'D'
-    E = 'E'
-    X = 'X'
-
-
 @dataclass(frozen=True)
 class SubjectScore:
-    korean: ScoreType
-    math: ScoreType
-    social: ScoreType
-    science: ScoreType
-    english: ScoreType
-    history: ScoreType
-    tech_home: ScoreType
+    korean: str
+    math: str
+    social: str
+    science: str
+    english: str
+    history: str
+    tech_home: str
 
 
 @dataclass(frozen=True)

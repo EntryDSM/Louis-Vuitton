@@ -1,0 +1,2 @@
+class WrongClassificationData(Exception):
+    pass

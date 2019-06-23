@@ -1,5 +1,8 @@
 from sanic import Sanic
 from sanic.config import Config
+from sanic.exceptions import SanicException
+from sanic.request import Request
+from sanic.response import HTTPResponse, json
 
 from ..data.db.mysql import MySQLClient
 
@@ -25,3 +28,18 @@ def generate_db_config(config: Config) -> dict:
 async def init_data_clients(app: Sanic, _) -> None:
     await MySQLClient.init(generate_db_config(app.config))
     # AsyncHTTPClient.init()
+
+
+# Todo
+# async def close_data_clients(app: Sanic, _) -> None:
+#     # mysql connection destroy
+#     pass
+
+
+async def error_handler(_: Request, exception: SanicException) -> HTTPResponse:
+    return json(
+        status=exception.status_code,
+        body={
+            'message': exception.args[0]
+        }
+    )
