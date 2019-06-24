@@ -32,10 +32,10 @@ def from_dict(data_class: Type[T], data: Dict[str, Any]) -> T:
 
 
 def _enum_validate(
-    target: Optional[str], allowable_list: List[str], nullable: bool=False
+    target: Optional[str], allowable_list: List[str], nullable: bool = False
 ) -> bool:
     if target is None:
-        return True if nullable else False
+        return nullable
 
     return target in allowable_list
 
