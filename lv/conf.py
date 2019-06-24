@@ -33,4 +33,3 @@ class Production(Config):
 @dataclass(frozen=True)
 class Testing(Config):
     TESTING: bool = True
-

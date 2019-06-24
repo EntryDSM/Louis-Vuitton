@@ -52,6 +52,7 @@ disable=
   bad-continuation,
   logging-fstring-interpolation,
   fixme,
+  invalid-name
 
 
 # Enable the message, report, category or checker with the given id(s). You can

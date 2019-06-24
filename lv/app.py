@@ -1,6 +1,9 @@
 import os
 
 from sanic import Sanic
+from sanic.exceptions import SanicException
+from sanic.request import Request
+from sanic.response import text
 
 from lv.conf import (
     Config,
@@ -9,6 +12,12 @@ from lv.conf import (
     Testing,
 )
 from lv.vault import get_config
+from lv.presentation import api
+from lv.presentation.middlewares import (
+    error_handler,
+    init_data_clients,
+    LISTENER_TYPE,
+)
 
 
 def init_config(env: str) -> Config:
@@ -31,8 +40,15 @@ def check_env_type(config: Config):
 
 
 def create_app() -> Sanic:
-    app_ = Sanic(__name__)
+    _app = Sanic(__name__)
 
-    app_.config.from_object(init_config(os.getenv('RUN_ENV', 'default')))
+    _app.config.from_object(init_config(os.getenv('RUN_ENV', 'default')))
+    _app.register_listener(init_data_clients, LISTENER_TYPE[0])
+    _app.error_handler.add(SanicException, error_handler)
+    _app.blueprint(api)
 
-    return app_
+    @_app.get('/')
+    async def _(_: Request):
+        return text('ping')
+
+    return _app
