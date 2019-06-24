@@ -3,7 +3,7 @@ from pypika import Table
 
 classification_tbl = Table('classification')
 
-applicant_document_tbl = Table('applicant_document')
+attached_document_tbl = Table('applicant_document')
 
 academic_information_tbl = Table('academic_information')
 
