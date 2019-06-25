@@ -1,4 +1,12 @@
-class WrongClassificationDataException(Exception):
+class WrongDataException(Exception):
+    pass
+
+
+class WrongClassificationDataException(WrongDataException):
+    pass
+
+
+class WrongDocumentDataException(WrongDataException):
     pass
 
 
