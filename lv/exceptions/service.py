@@ -1,14 +1,30 @@
 class WrongDataException(Exception):
-    pass
+    ...
 
 
 class WrongClassificationDataException(WrongDataException):
-    pass
+    ...
 
 
 class WrongDocumentDataException(WrongDataException):
-    pass
+    ...
 
 
 class NotAllowedValueException(Exception):
-    pass
+    ...
+
+
+class ExternalServiceException(Exception):
+    ...
+
+
+class InterCallException(Exception):
+    ...
+
+
+class InterCallBadRequestException(InterCallException):
+    ...
+
+
+class InterCallNotFoundException(InterCallException):
+    ...

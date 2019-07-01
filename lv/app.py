@@ -14,10 +14,14 @@ from lv.conf import (
 from lv.vault import get_config
 from lv.presentation import api
 from lv.presentation.middlewares import (
+    close_data_clients,
     error_handler,
     init_data_clients,
-    LISTENER_TYPE,
 )
+
+
+BEFORE_SERVER_START = 'before_server_start'
+AFTER_SERVER_STOP = 'after_server_stop'
 
 
 def init_config(env: str) -> Config:
@@ -43,7 +47,8 @@ def create_app() -> Sanic:
     _app = Sanic(__name__)
 
     _app.config.from_object(init_config(os.getenv('RUN_ENV', 'default')))
-    _app.register_listener(init_data_clients, LISTENER_TYPE[0])
+    _app.register_listener(init_data_clients, BEFORE_SERVER_START)
+    _app.register_listener(close_data_clients, AFTER_SERVER_STOP)
     _app.error_handler.add(SanicException, error_handler)
     _app.blueprint(api)
 
