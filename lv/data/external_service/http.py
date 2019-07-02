@@ -4,14 +4,17 @@ from functools import wraps
 
 import aiohttp
 
-from lv.exceptions.service import (
-    ExternalServiceException,
+from lv.exceptions.data import (
+    ExternalServiceDownException,
     InterCallBadRequestException,
     InterCallNotFoundException,
 )
 
+DEFAULT_RETRIES = 3
+DEFAULT_RETRY_INTERVAL = 3
 
-def retry(retries=3, interval=3):
+
+def retry(retries=DEFAULT_RETRIES, interval=DEFAULT_RETRY_INTERVAL):
     def outer_function(original_function):
         @wraps(original_function)
         async def inner_function(*args, **kwargs):
@@ -29,7 +32,7 @@ def retry(retries=3, interval=3):
                     retry_count += 1
 
                     if retry_count > retries:
-                        raise ExternalServiceException
+                        raise ExternalServiceDownException
 
                     await asyncio.sleep(interval * retry_count)
                 else:
@@ -64,7 +67,7 @@ class HTTPClient:
         cls.__session = None
 
     @classmethod
-    @retry(retries=3)
+    @retry()
     async def get(cls, url: str, **kwargs) -> Dict[str, Any]:
         session: aiohttp.ClientSession = await cls._get_session()
 
@@ -74,7 +77,7 @@ class HTTPClient:
             return await resp.json()
 
     @classmethod
-    @retry(retries=3)
+    @retry()
     async def get_list(cls, url: str, **kwargs) -> List[Dict[str, Any]]:
         session: aiohttp.ClientSession = await cls._get_session()
 
@@ -84,7 +87,7 @@ class HTTPClient:
             return await resp.json()
 
     @classmethod
-    @retry(retries=3)
+    @retry()
     async def patch(cls, url: str, json: Dict[str, Any]) -> None:
         session: aiohttp.ClientSession = await cls._get_session()
 

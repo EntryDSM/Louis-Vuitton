@@ -14,17 +14,13 @@ class NotAllowedValueException(Exception):
     ...
 
 
-class ExternalServiceException(Exception):
+class DataSourceException(Exception):
     ...
 
 
-class InterCallException(Exception):
+class DataSourceFaultException(DataSourceException):
     ...
 
 
-class InterCallBadRequestException(InterCallException):
-    ...
-
-
-class InterCallNotFoundException(InterCallException):
+class NonExistDataException(DataSourceException):
     ...

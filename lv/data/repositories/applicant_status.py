@@ -1,6 +1,14 @@
 from typing import Any, Dict, Type
 
 from lv.data.external_service.http import HTTPClient
+from lv.exceptions.data import (
+    ExternalServiceDownException,
+    InterCallNotFoundException,
+)
+from lv.exceptions.service import (
+    DataSourceFaultException,
+    NonExistDataException,
+)
 from lv.services.repository_interfaces.applicant_status import (
     ApplicantStatusRepositoryInterface,
 )
@@ -14,7 +22,12 @@ class ApplicantStatusRepository(ApplicantStatusRepositoryInterface):
         self.host = host + APPLICANT_STATUS_API_URL
 
     async def get_one(self, email: str) -> Dict[str, Any]:
-        return await self.client.get(self.host.format(email))
+        try:
+            return await self.client.get(self.host.format(email))
+        except ExternalServiceDownException:
+            raise DataSourceFaultException
+        except InterCallNotFoundException:
+            raise NonExistDataException
 
     async def patch(self, email: str, target: Dict[str, Any]) -> None:
         ...
