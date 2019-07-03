@@ -18,9 +18,7 @@ def retry(retries=DEFAULT_RETRIES, interval=DEFAULT_RETRY_INTERVAL_SECOND):
     def outer_function(original_function):
         @wraps(original_function)
         async def inner_function(*args, **kwargs):
-            retry_count: int = 0
-
-            while True:
+            for retry_count in range(retries):
                 try:
                     res = await original_function(*args, **kwargs)
                 except aiohttp.ClientResponseError as e:
@@ -29,14 +27,11 @@ def retry(retries=DEFAULT_RETRIES, interval=DEFAULT_RETRY_INTERVAL_SECOND):
                     if e.status == 404:
                         raise InterCallNotFoundException
 
-                    retry_count += 1
-
-                    if retry_count > retries:
-                        raise ExternalServiceDownException
-
-                    await asyncio.sleep(interval * retry_count)
+                    await asyncio.sleep(interval * (retry_count + 1))
                 else:
                     return res
+
+            raise ExternalServiceDownException
         return inner_function
     return outer_function
 
