@@ -6,3 +6,4 @@ sanic == 19.3.1
 uvloop == 0.12.2
 dacite == 1.0.2
 pypika == 0.28.0
+aiohttp==3.5.4

@@ -1,14 +1,26 @@
 class WrongDataException(Exception):
-    pass
+    ...
 
 
 class WrongClassificationDataException(WrongDataException):
-    pass
+    ...
 
 
 class WrongDocumentDataException(WrongDataException):
-    pass
+    ...
 
 
 class NotAllowedValueException(Exception):
-    pass
+    ...
+
+
+class DataSourceException(Exception):
+    ...
+
+
+class DataSourceFailureException(DataSourceException):
+    ...
+
+
+class NonExistDataException(DataSourceException):
+    ...

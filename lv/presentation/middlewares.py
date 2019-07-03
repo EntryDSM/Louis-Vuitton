@@ -4,15 +4,8 @@ from sanic.exceptions import SanicException
 from sanic.request import Request
 from sanic.response import HTTPResponse, json
 
-from ..data.db.mysql import MySQLClient
-
-
-LISTENER_TYPE = (
-    'before_server_start',
-    'after_server_start',
-    'before_server_stop',
-    'after_server_stop',
-)
+from lv.data.db.mysql import MySQLClient
+from lv.data.external_service.http import HTTPClient
 
 
 def generate_db_config(config: Config) -> dict:
@@ -27,13 +20,12 @@ def generate_db_config(config: Config) -> dict:
 
 async def init_data_clients(app: Sanic, _) -> None:
     await MySQLClient.init(generate_db_config(app.config))
-    # AsyncHTTPClient.init()
+    await HTTPClient.init()
 
 
-# Todo
-# async def close_data_clients(app: Sanic, _) -> None:
-#     # mysql connection destroy
-#     pass
+async def close_data_clients(_: Sanic, __) -> None:
+    await MySQLClient.destroy()
+    await HTTPClient.destroy()
 
 
 async def error_handler(_: Request, exception: SanicException) -> HTTPResponse:

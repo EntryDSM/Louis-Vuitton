@@ -6,6 +6,7 @@ from sanic.views import HTTPMethodView
 from lv.data.repositories.document import AttachedDocumentRepository
 from lv.exceptions.http import BadRequestParameter
 from lv.exceptions.service import WrongDocumentDataException
+from lv.presentation.helper import check_submit_status
 from lv.services.document import (
     get_attached_documents,
     upsert_attached_documents,
@@ -17,6 +18,7 @@ bp_document = Blueprint("document")
 class ApplicantAttachedDocumentView(HTTPMethodView):
     document_repository = AttachedDocumentRepository()
 
+    @check_submit_status
     async def get(self, _: Request, email: str) -> HTTPResponse:
         documents = await get_attached_documents(
             email, self.document_repository
@@ -24,13 +26,14 @@ class ApplicantAttachedDocumentView(HTTPMethodView):
 
         return json(body=documents, status=200)
 
+    @check_submit_status
     async def patch(self, request: Request, email: str) -> HTTPResponse:
         try:
             await upsert_attached_documents(
                 email, self.document_repository, request.json
             )
         except WrongDocumentDataException:
-            raise BadRequestParameter
+            raise BadRequestParameter('Invalid document value')
 
         return HTTPResponse(status=200)
 
