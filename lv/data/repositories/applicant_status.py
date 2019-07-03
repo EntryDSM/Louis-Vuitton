@@ -6,7 +6,7 @@ from lv.exceptions.data import (
     InterCallNotFoundException,
 )
 from lv.exceptions.service import (
-    DataSourceFaultException,
+    DataSourceFailureException,
     NonExistDataException,
 )
 from lv.services.repository_interfaces.applicant_status import (
@@ -25,7 +25,7 @@ class ApplicantStatusRepository(ApplicantStatusRepositoryInterface):
         try:
             return await self.client.get(self.host.format(email))
         except ExternalServiceDownException:
-            raise DataSourceFaultException
+            raise DataSourceFailureException
         except InterCallNotFoundException:
             raise NonExistDataException
 

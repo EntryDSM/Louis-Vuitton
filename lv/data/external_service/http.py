@@ -11,10 +11,10 @@ from lv.exceptions.data import (
 )
 
 DEFAULT_RETRIES = 3
-DEFAULT_RETRY_INTERVAL = 3
+DEFAULT_RETRY_INTERVAL_SECOND = 3
 
 
-def retry(retries=DEFAULT_RETRIES, interval=DEFAULT_RETRY_INTERVAL):
+def retry(retries=DEFAULT_RETRIES, interval=DEFAULT_RETRY_INTERVAL_SECOND):
     def outer_function(original_function):
         @wraps(original_function)
         async def inner_function(*args, **kwargs):

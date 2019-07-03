@@ -18,7 +18,7 @@ class DataSourceException(Exception):
     ...
 
 
-class DataSourceFaultException(DataSourceException):
+class DataSourceFailureException(DataSourceException):
     ...
 
 

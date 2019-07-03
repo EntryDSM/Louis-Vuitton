@@ -10,7 +10,7 @@ from lv.exceptions.http import (
     NotFoundApplicant,
 )
 from lv.exceptions.service import (
-    DataSourceFaultException,
+    DataSourceFailureException,
     NonExistDataException,
 )
 
@@ -24,7 +24,7 @@ def check_submit_status(original_function):
 
         try:
             applicant_status = await repository.get_one(kwargs['email'])
-        except DataSourceFaultException:
+        except DataSourceFailureException:
             raise InternalServerError('Data source fault')
         except NonExistDataException:
             raise NotFoundApplicant("Not found applicant")
