@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from decimal import Decimal
 from typing import Optional, List
 
 
@@ -15,10 +16,10 @@ class SubjectScore:
 
 @dataclass(frozen=True)
 class Grade:
-    volunteer_score: Optional[int]
+    volunteer_score: Optional[Decimal]
     attendance_score: Optional[int]
-    conversion_score: Optional[float]
-    final_score: Optional[float]
+    conversion_score: Optional[Decimal]
+    final_score: Optional[Decimal]
 
 
 @dataclass(frozen=True)
