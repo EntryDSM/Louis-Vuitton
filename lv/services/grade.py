@@ -64,7 +64,7 @@ async def _calculate_volunteer_score(
 
     if volunteer_time >= 50:
         volunteer_score = Decimal('15')
-    elif 15 <= volunteer_time <= 49:
+    elif 49 >= volunteer_time >= 15:
         volunteer_score = round(
             Decimal(str((volunteer_time - 14) / 3)) + 3, 3
         )
@@ -74,16 +74,11 @@ async def _calculate_volunteer_score(
     return volunteer_score
 
 
-async def upsert_diligence_grade(
+async def _update_grade(
+    diligence_grade: DiligenceGrade,
+    repository: GradeRepositoryInterface,
     email: str,
-    diligence_repository: DiligenceGradeRepositoryInterface,
-    grade_repository: GradeRepositoryInterface,
-    target: Dict[str, Any],
 ):
-    diligence_grade = await _patch_diligence_grade(
-        email, diligence_repository, target
-    )
-
     attendance_score: int = await _calculate_attendance_score(diligence_grade)
     volunteer_score: Decimal = await _calculate_volunteer_score(
         diligence_grade
@@ -94,4 +89,17 @@ async def upsert_diligence_grade(
         'volunteer_score': volunteer_score
     })
 
-    await grade_repository.patch(email, to_dict(grade))
+    await repository.patch(email, to_dict(grade))
+
+
+async def upsert_diligence_grade(
+    email: str,
+    diligence_repository: DiligenceGradeRepositoryInterface,
+    grade_repository: GradeRepositoryInterface,
+    target: Dict[str, Any],
+) -> None:
+    diligence_grade = await _patch_diligence_grade(
+        email, diligence_repository, target
+    )
+
+    await _update_grade(diligence_grade, grade_repository, email)
