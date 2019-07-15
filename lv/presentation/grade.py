@@ -7,7 +7,7 @@ from lv.data.repositories.grade import (
     DiligenceGradeRepository,
     GradeRepository,
 )
-from lv.presentation.helper import check_submit_status, ged_not_allowed
+from lv.presentation.helper import check_is_ged, check_submit_status
 from lv.services.grade import (
     get_diligence_grade,
     upsert_diligence_grade,
@@ -21,7 +21,7 @@ class DiligenceGradeView(HTTPMethodView):
     grade_repository = GradeRepository()
 
     @check_submit_status
-    @ged_not_allowed
+    @check_is_ged(allow=False)
     def get(self, _: Request, email: str) -> HTTPResponse:
         diligence_grade = await get_diligence_grade(
             email, self.diligence_repository
@@ -30,7 +30,7 @@ class DiligenceGradeView(HTTPMethodView):
         return json(status=200, body=diligence_grade)
 
     @check_submit_status
-    @ged_not_allowed
+    @check_is_ged(allow=False)
     def patch(self, request: Request, email: str) -> HTTPResponse:
         await upsert_diligence_grade(
             email,
@@ -44,22 +44,24 @@ class DiligenceGradeView(HTTPMethodView):
 
 class ScoreGradeView(HTTPMethodView):
     @check_submit_status
-    @ged_not_allowed
+    @check_is_ged(allow=False)
     def get(self, _: Request, email: str) -> HTTPResponse:
         ...
 
     @check_submit_status
-    @ged_not_allowed
+    @check_is_ged(allow=False)
     def patch(self, _: Request, email: str) -> HTTPResponse:
         ...
 
 
 class GedScoreGradeView(HTTPMethodView):
     @check_submit_status
+    @check_is_ged(allow=True)
     def get(self, _: Request, email: str) -> HTTPResponse:
         ...
 
     @check_submit_status
+    @check_is_ged(allow=True)
     def patch(self, _: Request, email: str) -> HTTPResponse:
         ...
 
