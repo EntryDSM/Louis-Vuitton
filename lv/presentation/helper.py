@@ -4,6 +4,7 @@ from sanic.request import Request
 from sanic.response import HTTPResponse
 
 from lv.data.repositories.applicant_status import ApplicantStatusRepository
+from lv.data.repositories.classification import ClassificationRepository
 from lv.exceptions.http import (
     Forbidden,
     InternalServerError,
@@ -38,5 +39,24 @@ def check_submit_status(original_function):
             return response
 
         raise Forbidden('Already submitted applicant')
+
+    return decorated_function
+
+
+def ged_not_allowed(original_function):
+    @wraps(original_function)
+    async def decorated_function(request: Request, *args, **kwargs):
+        repository = ClassificationRepository()
+
+        classification = await repository.get_one(kwargs['email'])
+
+        if classification['is_ged'] is False:
+            response: HTTPResponse = await original_function(
+                request, *args, **kwargs
+            )
+
+            return response
+
+        raise Forbidden('Ged not allowed')
 
     return decorated_function

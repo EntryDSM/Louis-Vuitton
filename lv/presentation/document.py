@@ -35,7 +35,7 @@ class ApplicantAttachedDocumentView(HTTPMethodView):
         except WrongDocumentDataException:
             raise BadRequestParameter('Invalid document value')
 
-        return HTTPResponse(status=200)
+        return HTTPResponse(status=204)
 
 
 bp_document.add_route(

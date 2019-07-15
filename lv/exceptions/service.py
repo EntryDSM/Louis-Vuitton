@@ -10,6 +10,10 @@ class WrongDocumentDataException(WrongDataException):
     ...
 
 
+class WrongDiligenceGradeDataException(WrongDataException):
+    ...
+
+
 class NotAllowedValueException(Exception):
     ...
 
