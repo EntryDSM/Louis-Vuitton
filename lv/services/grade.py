@@ -132,7 +132,9 @@ async def _patch_ged_grade(
     target: Dict[str, Any]
 ) -> GedGrade:
     try:
-        ged_grade = from_dict(data_class=GedGrade, data=target)
+        ged_grade = from_dict(
+            data_class=GedGrade, data=target, decimal_auto_convert=True
+        )
     except (MissingValueError, WrongTypeError):
         raise WrongGedGradeDataException
 
