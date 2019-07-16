@@ -4,7 +4,10 @@ from sanic.response import HTTPResponse, json
 from sanic.views import HTTPMethodView
 
 from lv.exceptions.http import BadRequestParameter
-from lv.exceptions.service import WrongDiligenceGradeDataException
+from lv.exceptions.service import (
+    WrongDiligenceGradeDataException,
+    WrongGedGradeDataException,
+)
 from lv.data.repositories.classification import ClassificationRepository
 from lv.data.repositories.grade import (
     DiligenceGradeRepository,
@@ -78,13 +81,16 @@ class GedScoreGradeView(HTTPMethodView):
     @check_submit_status
     @check_is_ged(allow=True)
     def patch(self, request: Request, email: str) -> HTTPResponse:
-        await upsert_ged_applicant_grade(
-            email,
-            self.ged_repository,
-            self.grade_repository,
-            self.classification_repository,
-            request.json
-        )
+        try:
+            await upsert_ged_applicant_grade(
+                email,
+                self.ged_repository,
+                self.grade_repository,
+                self.classification_repository,
+                request.json
+            )
+        except WrongGedGradeDataException:
+            raise BadRequestParameter('Invalid ged grade value')
 
         return HTTPResponse(status=204)
 

@@ -75,7 +75,7 @@ async def _calculate_volunteer_score(
         volunteer_score = Decimal('15')
     elif 49 >= volunteer_time >= 15:
         volunteer_score = round(
-            Decimal(str(volunteer_time - 14)) / 3 + 3, 3
+            Decimal(str(volunteer_time - 14)) / 36 * 12 + 3, 3
         )
     else:
         volunteer_score = Decimal('3')
@@ -136,7 +136,7 @@ async def _patch_ged_grade(
     except (MissingValueError, WrongTypeError):
         raise WrongGedGradeDataException
 
-    await repository.patch(email, to_dict(ged_grade))
+    await repository.patch(email, ged_grade.ged_average_score)
 
     return from_dict(
         data_class=GedGrade, data=await repository.get_one(email)
@@ -176,7 +176,7 @@ async def _update_ged_applicant_grade(
 async def _calculate_ged_volunteer_score(ged_grade: GedGrade) -> Decimal:
     ged_average_score: Decimal = ged_grade.ged_average_score
 
-    return round((ged_average_score - 40) / 5 + 3, 3)
+    return round((ged_average_score - 40) / 60 * 12 + 3, 3)
 
 
 async def _calculate_ged_conversion_score(
@@ -185,7 +185,7 @@ async def _calculate_ged_conversion_score(
     ged_average_score: Decimal = ged_grade.ged_average_score
 
     if classification == ALLOWABLE_APPLY_TYPES[0]:
-        conversion_score = round((ged_average_score - 50) * 3, 3)
+        conversion_score = round((ged_average_score - 50) / 50 * 150, 3)
     else:
         conversion_score = round((ged_average_score - 50) / 50 * 90, 3)
 
