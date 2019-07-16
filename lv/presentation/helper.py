@@ -43,7 +43,7 @@ def check_submit_status(original_function):
     return decorated_function
 
 
-def check_is_ged(allow: bool=False):
+def check_is_ged(allow: bool = False):
     def outer_function(original_function):
         @wraps(original_function)
         async def decorated_function(request: Request, *args, **kwargs):

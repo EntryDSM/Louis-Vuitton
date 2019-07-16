@@ -4,7 +4,7 @@ from dataclasses import asdict
 import dacite
 
 from lv.entities.classification import Classification
-from lv.entities.grade import ScoreGrade
+from lv.entities.grade import SubjectScoreGrade
 from lv.entities.constant import (
     ALLOWABLE_ADDITIONAL_TYPES,
     ALLOWABLE_APPLY_TYPES,
@@ -25,7 +25,7 @@ def from_dict(data_class: Type[T], data: Dict[str, Any]) -> T:
 
     if isinstance(entity, Classification):
         _classification_from_dict(entity)
-    elif isinstance(entity, ScoreGrade) and entity.subject_score:
+    elif isinstance(entity, SubjectScoreGrade) and entity.subject_score:
         _score_grade_from_dict(entity)
 
     return entity
@@ -61,7 +61,7 @@ def _classification_from_dict(entity: Classification) -> None:
         raise NotAllowedValueException
 
 
-def _score_grade_from_dict(entity: ScoreGrade) -> None:
+def _score_grade_from_dict(entity: SubjectScoreGrade) -> None:
     for subject in entity.subject_score:
         for score in asdict(subject).values():
             if not _enum_validate(score, ALLOWABLE_SCORE_TYPES):

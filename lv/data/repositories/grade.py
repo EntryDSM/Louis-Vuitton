@@ -1,4 +1,5 @@
-from typing import Any, Dict, Type
+from decimal import Decimal
+from typing import Any, Dict, List, Type
 
 from pypika import Parameter, Query
 
@@ -6,7 +7,9 @@ from lv.data.db.mysql import MySQLClient
 from lv.data.db.tables import applicant_score_tbl
 from lv.services.repository_interfaces.grade import (
     DiligenceGradeRepositoryInterface,
+    GedGradeRepositoryInterface,
     GradeRepositoryInterface,
+    ScoreGradeRepositoryInterface,
 )
 
 
@@ -51,3 +54,34 @@ class GradeRepository(GradeRepositoryInterface):
             query = query.set(col, target[col])
 
         await self.db.execute(query.get_sql(quote_char=None), email)
+
+
+class SubjectScoreGradeRepository(ScoreGradeRepositoryInterface):
+    async def get(self, email: str) -> List[Dict[str, Any]]:
+        ...
+
+    async def patch(self, email: str, target: Dict[str, Any]):
+        ...
+
+
+class GedGradeRepository(GedGradeRepositoryInterface):
+    def __init__(self, db: Type[MySQLClient] = MySQLClient):
+        self.db = db
+
+    async def get_one(self, email: str) -> Dict[str, Any]:
+        query: str = Query.from_(applicant_score_tbl).select(
+            applicant_score_tbl.ged_average_score
+        ).where(
+            applicant_score_tbl.applicant_email == Parameter("%s")
+        ).get_sql(quote_char=None)
+
+        return await self.db.fetchone(query, email)
+
+    async def patch(self, email: str, ged_average_score: Decimal):
+        query = Query.update(applicant_score_tbl).set(
+            applicant_score_tbl.ged_average_score, ged_average_score
+        ).where(
+            applicant_score_tbl.applicant_email == Parameter("%s")
+        ).get_sql(quote_char=None)
+
+        await self.db.execute(query, email)

@@ -14,6 +14,10 @@ class WrongDiligenceGradeDataException(WrongDataException):
     ...
 
 
+class WrongGedGradeDataException(WrongDataException):
+    ...
+
+
 class NotAllowedValueException(Exception):
     ...
 
