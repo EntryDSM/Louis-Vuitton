@@ -1,5 +1,6 @@
-from typing import Any, Dict, List, Type, TypeVar, Optional
 from dataclasses import asdict
+from decimal import Decimal
+from typing import Any, Dict, List, Type, TypeVar, Optional
 
 import dacite
 
@@ -20,7 +21,16 @@ def to_dict(entity_instance: T) -> Dict[str, Any]:
     return {k: v for k, v in asdict(entity_instance).items() if v is not None}
 
 
-def from_dict(data_class: Type[T], data: Dict[str, Any]) -> T:
+def from_dict(
+    data_class: Type[T],
+    data: Dict[str, Any],
+    decimal_auto_convert: bool = False,
+) -> T:
+    if decimal_auto_convert:
+        data = {
+            k: Decimal(str(v)) for k, v in data.items() if isinstance(float, v)
+        }
+
     entity: T = dacite.from_dict(data_class=data_class, data=data)
 
     if isinstance(entity, Classification):
