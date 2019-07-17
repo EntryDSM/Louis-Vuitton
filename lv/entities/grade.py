@@ -23,9 +23,13 @@ class Grade:
 
 
 @dataclass(frozen=True)
-class ScoreGrade:
-    ged_average_score: Optional[float]
+class SubjectScoreGrade:
     subject_score: Optional[List[SubjectScore]]
+
+
+@dataclass(frozen=True)
+class GedGrade:
+    ged_average_score: Optional[Decimal]
 
 
 @dataclass(frozen=True)

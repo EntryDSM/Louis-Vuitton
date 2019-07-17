@@ -43,20 +43,21 @@ def check_submit_status(original_function):
     return decorated_function
 
 
-def ged_not_allowed(original_function):
-    @wraps(original_function)
-    async def decorated_function(request: Request, *args, **kwargs):
-        repository = ClassificationRepository()
+def check_is_ged(allow: bool = False):
+    def outer_function(original_function):
+        @wraps(original_function)
+        async def decorated_function(request: Request, *args, **kwargs):
+            repository = ClassificationRepository()
 
-        classification = await repository.get_one(kwargs['email'])
+            classification = await repository.get_one(kwargs['email'])
 
-        if classification['is_ged'] is False:
-            response: HTTPResponse = await original_function(
-                request, *args, **kwargs
-            )
+            if classification['is_ged'] is allow:
+                response: HTTPResponse = await original_function(
+                    request, *args, **kwargs
+                )
 
-            return response
+                return response
 
-        raise Forbidden('Ged not allowed')
-
-    return decorated_function
+            raise Forbidden('Ged not allowed')
+        return decorated_function
+    return outer_function

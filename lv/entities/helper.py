@@ -1,10 +1,11 @@
-from typing import Any, Dict, List, Type, TypeVar, Optional
 from dataclasses import asdict
+from decimal import Decimal
+from typing import Any, Dict, List, Type, TypeVar, Optional
 
 import dacite
 
 from lv.entities.classification import Classification
-from lv.entities.grade import ScoreGrade
+from lv.entities.grade import SubjectScoreGrade
 from lv.entities.constant import (
     ALLOWABLE_ADDITIONAL_TYPES,
     ALLOWABLE_APPLY_TYPES,
@@ -20,12 +21,21 @@ def to_dict(entity_instance: T) -> Dict[str, Any]:
     return {k: v for k, v in asdict(entity_instance).items() if v is not None}
 
 
-def from_dict(data_class: Type[T], data: Dict[str, Any]) -> T:
+def from_dict(
+    data_class: Type[T],
+    data: Dict[str, Any],
+    decimal_auto_convert: bool = False,
+) -> T:
+    if decimal_auto_convert:
+        data = {
+            k: Decimal(str(v)) for k, v in data.items() if isinstance(float, v)
+        }
+
     entity: T = dacite.from_dict(data_class=data_class, data=data)
 
     if isinstance(entity, Classification):
         _classification_from_dict(entity)
-    elif isinstance(entity, ScoreGrade) and entity.subject_score:
+    elif isinstance(entity, SubjectScoreGrade) and entity.subject_score:
         _score_grade_from_dict(entity)
 
     return entity
@@ -61,7 +71,7 @@ def _classification_from_dict(entity: Classification) -> None:
         raise NotAllowedValueException
 
 
-def _score_grade_from_dict(entity: ScoreGrade) -> None:
+def _score_grade_from_dict(entity: SubjectScoreGrade) -> None:
     for subject in entity.subject_score:
         for score in asdict(subject).values():
             if not _enum_validate(score, ALLOWABLE_SCORE_TYPES):
