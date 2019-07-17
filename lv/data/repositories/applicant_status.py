@@ -28,6 +28,3 @@ class ApplicantStatusRepository(ApplicantStatusRepositoryInterface):
             raise DataSourceFailureException
         except InterCallNotFoundException:
             raise NonExistDataException
-
-    async def patch(self, email: str, target: Dict[str, Any]) -> None:
-        ...

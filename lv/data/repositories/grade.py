@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Type
 from pypika import Parameter, Query
 
 from lv.data.db.mysql import MySQLClient
-from lv.data.db.tables import applicant_score_tbl
+from lv.data.db.tables import applicant_score_tbl, grade_by_semester_tbl
 from lv.services.repository_interfaces.grade import (
     DiligenceGradeRepositoryInterface,
     GedGradeRepositoryInterface,
@@ -57,8 +57,19 @@ class GradeRepository(GradeRepositoryInterface):
 
 
 class SubjectScoreGradeRepository(ScoreGradeRepositoryInterface):
+    def __init__(self, db: Type[MySQLClient] = MySQLClient):
+        self.db = db
+
     async def get(self, email: str) -> List[Dict[str, Any]]:
-        ...
+        query: str = Query.from_(grade_by_semester_tbl).select(
+            grade_by_semester_tbl.subject,
+            grade_by_semester_tbl.semester,
+            grade_by_semester_tbl.score
+        ).where(
+            applicant_score_tbl.applicant_email == Parameter("%s")
+        ).get_sql(quote_char=None)
+
+        return await self.db.fetchall(query, email)
 
     async def patch(self, email: str, target: Dict[str, Any]):
         ...
