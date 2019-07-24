@@ -5,13 +5,9 @@ from typing import Optional, List
 
 @dataclass(frozen=True)
 class SubjectScore:
-    korean: str
-    math: str
-    social: str
-    science: str
-    english: str
-    history: str
-    tech_home: str
+    semester: int
+    subject: str
+    score: str
 
 
 @dataclass(frozen=True)
@@ -23,8 +19,8 @@ class Grade:
 
 
 @dataclass(frozen=True)
-class SubjectScoreGrade:
-    subject_score: Optional[List[SubjectScore]]
+class AcademicGrade:
+    subject_scores: Optional[List[SubjectScore]]
 
 
 @dataclass(frozen=True)

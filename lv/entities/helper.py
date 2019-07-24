@@ -5,12 +5,15 @@ from typing import Any, Dict, List, Type, TypeVar, Optional
 import dacite
 
 from lv.entities.classification import Classification
-from lv.entities.grade import SubjectScoreGrade
+from lv.entities.grade import AcademicGrade
 from lv.entities.constant import (
     ALLOWABLE_ADDITIONAL_TYPES,
     ALLOWABLE_APPLY_TYPES,
+    ALLOWABLE_GRADUATED_SEMESTER_RANGE,
     ALLOWABLE_SCORE_TYPES,
+    ALLOWABLE_SUBJECT_TYPES,
     ALLOWABLE_SOCIAL_DETAIL_TYPES,
+    ALLOWABLE_UNDERGRADUATE_SEMESTER_RANGE,
 )
 from lv.exceptions.service import NotAllowedValueException
 
@@ -34,9 +37,9 @@ def from_dict(
     entity: T = dacite.from_dict(data_class=data_class, data=data)
 
     if isinstance(entity, Classification):
-        _classification_from_dict(entity)
-    elif isinstance(entity, SubjectScoreGrade) and entity.subject_score:
-        _score_grade_from_dict(entity)
+        _validate_classification_data(entity)
+    elif isinstance(entity, AcademicGrade) and entity.subject_scores:
+        _validate_academic_grade_data(entity)
 
     return entity
 
@@ -50,7 +53,13 @@ def _enum_validate(
     return target in allowable_list
 
 
-def _classification_from_dict(entity: Classification) -> None:
+def _integer_range_validate(
+    target: int, allowable_range: range
+) -> bool:
+    return target in allowable_range
+
+
+def _validate_classification_data(entity: Classification) -> None:
     is_allowed_apply_type = _enum_validate(
         entity.apply_type, ALLOWABLE_APPLY_TYPES
     )
@@ -71,8 +80,26 @@ def _classification_from_dict(entity: Classification) -> None:
         raise NotAllowedValueException
 
 
-def _score_grade_from_dict(entity: SubjectScoreGrade) -> None:
-    for subject in entity.subject_score:
-        for score in asdict(subject).values():
-            if not _enum_validate(score, ALLOWABLE_SCORE_TYPES):
-                raise NotAllowedValueException
+def _get_allowable_range(scores_len: int) -> range:
+    if scores_len == len(ALLOWABLE_GRADUATED_SEMESTER_RANGE):
+        return ALLOWABLE_GRADUATED_SEMESTER_RANGE
+    elif scores_len == len(ALLOWABLE_UNDERGRADUATE_SEMESTER_RANGE):
+        return ALLOWABLE_UNDERGRADUATE_SEMESTER_RANGE
+    else:
+        raise NotAllowedValueException
+
+
+def _validate_academic_grade_data(
+    entity: AcademicGrade
+) -> None:
+    scores = entity.subject_scores
+
+    for score in scores:
+        if not _enum_validate(score.score, ALLOWABLE_SCORE_TYPES):
+            raise NotAllowedValueException
+        if not _enum_validate(score.subject, ALLOWABLE_SUBJECT_TYPES):
+            raise NotAllowedValueException
+        if not _integer_range_validate(
+            score.semester, _get_allowable_range(len(scores))
+        ):
+            raise NotAllowedValueException

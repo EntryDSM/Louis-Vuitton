@@ -54,7 +54,7 @@ class DiligenceGradeView(HTTPMethodView):
         return HTTPResponse(status=204)
 
 
-class ScoreGradeView(HTTPMethodView):
+class AcademicGradeView(HTTPMethodView):
     @check_submit_status
     @check_is_ged(allow=False)
     def get(self, _: Request, email: str) -> HTTPResponse:
@@ -96,5 +96,5 @@ class GedScoreGradeView(HTTPMethodView):
 
 
 bp_grade.add_route(DiligenceGradeView.as_view(), '/diligence')
-bp_grade.add_route(ScoreGradeView.as_view(), '/score')
+bp_grade.add_route(AcademicGradeView.as_view(), '/academic-score')
 bp_grade.add_route(GedScoreGradeView.as_view(), '/ged-score')
