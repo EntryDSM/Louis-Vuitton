@@ -10,12 +10,14 @@ from lv.exceptions.service import (
 )
 from lv.data.repositories.classification import ClassificationRepository
 from lv.data.repositories.grade import (
+    AcademicGradeRepository,
     DiligenceGradeRepository,
     GedGradeRepository,
     GradeRepository,
 )
 from lv.presentation.helper import check_is_ged, check_submit_status
 from lv.services.grade import (
+    get_academic_grade,
     get_diligence_grade,
     get_ged_grade,
     upsert_diligence_grade,
@@ -55,10 +57,16 @@ class DiligenceGradeView(HTTPMethodView):
 
 
 class AcademicGradeView(HTTPMethodView):
+    academic_repository = AcademicGradeRepository()
+
     @check_submit_status
     @check_is_ged(allow=False)
     def get(self, _: Request, email: str) -> HTTPResponse:
-        ...
+        academic_grade = await get_academic_grade(
+            email, self.academic_repository
+        )
+
+        return json(status=200, body=academic_grade['subject_scores'])
 
     @check_submit_status
     @check_is_ged(allow=False)

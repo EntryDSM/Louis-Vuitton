@@ -19,9 +19,9 @@ class GradeRepositoryInterface(ABC):
         pass
 
 
-class ScoreGradeRepositoryInterface(ABC):
+class AcademicGradeRepositoryInterface(ABC):
     @abstractmethod
-    async def get(self, email: str) -> List[Dict[str, Any]]:
+    async def get(self, email: str) -> Dict[str, Any]:
         pass
 
     @abstractmethod

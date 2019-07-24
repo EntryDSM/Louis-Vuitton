@@ -6,10 +6,10 @@ from pypika import Parameter, Query
 from lv.data.db.mysql import MySQLClient
 from lv.data.db.tables import applicant_score_tbl, grade_by_semester_tbl
 from lv.services.repository_interfaces.grade import (
+    AcademicGradeRepositoryInterface,
     DiligenceGradeRepositoryInterface,
     GedGradeRepositoryInterface,
     GradeRepositoryInterface,
-    ScoreGradeRepositoryInterface,
 )
 
 
@@ -56,11 +56,11 @@ class GradeRepository(GradeRepositoryInterface):
         await self.db.execute(query.get_sql(quote_char=None), email)
 
 
-class SubjectScoreGradeRepository(ScoreGradeRepositoryInterface):
+class AcademicGradeRepository(AcademicGradeRepositoryInterface):
     def __init__(self, db: Type[MySQLClient] = MySQLClient):
         self.db = db
 
-    async def get(self, email: str) -> List[Dict[str, Any]]:
+    async def get(self, email: str) -> Dict[str, Any]:
         query: str = Query.from_(grade_by_semester_tbl).select(
             grade_by_semester_tbl.subject,
             grade_by_semester_tbl.semester,
@@ -69,7 +69,7 @@ class SubjectScoreGradeRepository(ScoreGradeRepositoryInterface):
             applicant_score_tbl.applicant_email == Parameter("%s")
         ).get_sql(quote_char=None)
 
-        return await self.db.fetchall(query, email)
+        return {'subject_scores': await self.db.fetchall(query, email)}
 
     async def patch(self, email: str, target: Dict[str, Any]):
         ...

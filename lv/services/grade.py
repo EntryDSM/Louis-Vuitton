@@ -1,10 +1,10 @@
 from decimal import Decimal
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from dacite import MissingValueError, WrongTypeError
 
 from lv.entities.constant import ALLOWABLE_APPLY_TYPES
-from lv.entities.grade import DiligenceGrade, GedGrade, Grade
+from lv.entities.grade import AcademicGrade, DiligenceGrade, GedGrade, Grade
 from lv.entities.helper import from_dict, to_dict
 from lv.exceptions.service import (
     WrongDiligenceGradeDataException,
@@ -15,6 +15,7 @@ from lv.services.repository_interfaces.classification import (
     ClassificationRepositoryInterface,
 )
 from lv.services.repository_interfaces.grade import (
+    AcademicGradeRepositoryInterface,
     DiligenceGradeRepositoryInterface,
     GedGradeRepositoryInterface,
     GradeRepositoryInterface,
@@ -219,3 +220,14 @@ async def upsert_ged_applicant_grade(
     await _update_ged_applicant_grade(
         ged_grade, grade_repository, classification_repository, email
     )
+
+
+async def get_academic_grade(
+    email: str, repository: AcademicGradeRepositoryInterface
+) -> Dict[str, Any]:
+    academic_grade: AcademicGrade = from_dict(
+        data_class=AcademicGrade,
+        data=await repository.get(email),
+    )
+
+    return to_dict(academic_grade)
