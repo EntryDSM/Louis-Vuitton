@@ -1,13 +1,12 @@
 ALLOWABLE_APPLY_TYPES = ['common', 'meister', 'social']
 
 ALLOWABLE_SOCIAL_DETAIL_TYPES = [
+    'income_level_base',
     'one_parent',
+    'only_child_family',
+    'income_level_second',
     'from_north',
     'multicultural_family',
-    'income_level_base',
-    'income_level_second',
-    'income_level_third',
-    'etc',
 ]
 
 ALLOWABLE_ADDITIONAL_TYPES = ['national_merit', 'special_admission']

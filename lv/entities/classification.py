@@ -9,4 +9,5 @@ class Classification:
     social_detail_type: Optional[str]
     is_daejeon: bool
     is_graduated: Optional[bool]
+    graduated_year: Optional[str]
     additional_type: Optional[str]

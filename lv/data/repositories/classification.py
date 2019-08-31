@@ -22,6 +22,7 @@ class ClassificationRepository(ClassificationRepositoryInterface):
             classification_tbl.is_graduated,
             classification_tbl.additional_type,
             classification_tbl.social_detail_type,
+            classification_tbl.graduated_year
         ).where(
             classification_tbl.applicant_email == Parameter("%s")
         ).get_sql(quote_char=None)
