@@ -15,7 +15,11 @@ from lv.data.repositories.grade import (
     GedGradeRepository,
     GradeRepository,
 )
-from lv.presentation.helper import check_is_ged, check_submit_status
+from lv.presentation.helper import (
+    as_response,
+    check_is_ged,
+    check_submit_status,
+)
 from lv.services.grade import (
     get_academic_grade,
     get_diligence_grade,
@@ -38,7 +42,7 @@ class DiligenceGradeView(HTTPMethodView):
             email, self.diligence_repository
         )
 
-        return json(status=200, body=diligence_grade)
+        return json(status=200, body=as_response(diligence_grade))
 
     @check_submit_status
     @check_is_ged(allow=False)
@@ -66,7 +70,9 @@ class AcademicGradeView(HTTPMethodView):
             email, self.academic_repository
         )
 
-        return json(status=200, body=academic_grade['subject_scores'])
+        return json(
+            status=200, body=as_response(academic_grade['subject_scores'])
+        )
 
     @check_submit_status
     @check_is_ged(allow=False)
@@ -84,7 +90,7 @@ class GedScoreGradeView(HTTPMethodView):
     def get(self, _: Request, email: str) -> HTTPResponse:
         ged_grade = await get_ged_grade(email, self.ged_repository)
 
-        return json(status=200, body=ged_grade)
+        return json(status=200, body=as_response(ged_grade))
 
     @check_submit_status
     @check_is_ged(allow=True)

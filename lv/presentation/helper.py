@@ -1,4 +1,5 @@
 from functools import wraps
+from typing import Any, Dict, List, Union
 
 from sanic.request import Request
 from sanic.response import HTTPResponse
@@ -14,6 +15,12 @@ from lv.exceptions.service import (
     DataSourceFailureException,
     NonExistDataException,
 )
+
+
+def as_response(
+        data: Union[List[Dict, str], Dict[str, Any]]
+) -> Dict[str, Any]:
+    return {'data': data}
 
 
 def check_submit_status(original_function):

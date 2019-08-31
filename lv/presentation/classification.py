@@ -6,7 +6,7 @@ from sanic.views import HTTPMethodView
 from lv.data.repositories.classification import ClassificationRepository
 from lv.exceptions.http import BadRequestParameter
 from lv.exceptions.service import WrongClassificationDataException
-from lv.presentation.helper import check_submit_status
+from lv.presentation.helper import as_response, check_submit_status
 from lv.services.classification import (
     get_applicant_classification,
     upsert_applicant_classification,
@@ -24,7 +24,7 @@ class ApplicantClassificationView(HTTPMethodView):
             email, self.classification_repository
         )
 
-        return json(status=200, body=classification)
+        return json(status=200, body=as_response(classification))
 
     @check_submit_status
     async def patch(self, request: Request, email: str) -> HTTPResponse:
