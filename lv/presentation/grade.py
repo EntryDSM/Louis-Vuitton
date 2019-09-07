@@ -24,6 +24,7 @@ from lv.services.grade import (
     get_academic_grade,
     get_diligence_grade,
     get_ged_grade,
+    upsert_academic_grade,
     upsert_diligence_grade,
     upsert_ged_applicant_grade,
 )
@@ -62,6 +63,8 @@ class DiligenceGradeView(HTTPMethodView):
 
 class AcademicGradeView(HTTPMethodView):
     academic_repository = AcademicGradeRepository()
+    grade_repository = GradeRepository()
+    classification_repository = ClassificationRepository()
 
     @check_submit_status
     @check_is_ged(allow=False)
@@ -76,8 +79,16 @@ class AcademicGradeView(HTTPMethodView):
 
     @check_submit_status
     @check_is_ged(allow=False)
-    def patch(self, _: Request, email: str) -> HTTPResponse:
-        ...
+    def patch(self, request: Request, email: str) -> HTTPResponse:
+        await upsert_academic_grade(
+            email,
+            self.academic_repository,
+            self.grade_repository,
+            self.classification_repository,
+            request.json
+        )
+
+        return HTTPResponse(status=204)
 
 
 class GedScoreGradeView(HTTPMethodView):

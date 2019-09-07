@@ -45,6 +45,18 @@ class GradeRepository(GradeRepositoryInterface):
     def __init__(self, db: Type[MySQLClient] = MySQLClient):
         self.db = db
 
+    async def get_one(self, email: str) -> Dict[str, Any]:
+        query: str = Query.from_(applicant_score_tbl).select(
+            applicant_score_tbl.volunteer_score,
+            applicant_score_tbl.attendance_score,
+            applicant_score_tbl.conversion_score,
+            applicant_score_tbl.final_score
+        ).where(
+            applicant_score_tbl.applicant_email == Parameter("%s")
+        ).get_sql(quote_char=None)
+
+        return await self.db.fetchone(query, email)
+
     async def patch(self, email: str, target: Dict[str, Any]):
         query = Query.update(applicant_score_tbl).where(
             applicant_score_tbl.applicant_email == Parameter("%s")
@@ -72,7 +84,8 @@ class AcademicGradeRepository(AcademicGradeRepositoryInterface):
         return {'subject_scores': await self.db.fetchall(query, email)}
 
     async def patch(self, email: str, target: Dict[str, Any]):
-        ...
+        # insert? or update
+        pass
 
 
 class GedGradeRepository(GedGradeRepositoryInterface):

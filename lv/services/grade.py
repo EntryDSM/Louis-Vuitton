@@ -4,9 +4,11 @@ from typing import Any, Dict, List
 from dacite import MissingValueError, WrongTypeError
 
 from lv.entities.constant import ALLOWABLE_APPLY_TYPES
+from lv.entities.classification import Classification
 from lv.entities.grade import AcademicGrade, DiligenceGrade, GedGrade, Grade
 from lv.entities.helper import from_dict, to_dict
 from lv.exceptions.service import (
+    WrongAcademicGradeDataException,
     WrongDiligenceGradeDataException,
     WrongGedGradeDataException,
 )
@@ -152,7 +154,7 @@ async def _update_ged_applicant_grade(
     classification_repository: ClassificationRepositoryInterface,
     email: str
 ):
-    classification: str = await _get_classification_for_grade_calculation(
+    classification = await _get_classification_for_grade_calculation(
         email, classification_repository
     )
 
@@ -160,7 +162,7 @@ async def _update_ged_applicant_grade(
     volunteer_score: Decimal = await _calculate_ged_volunteer_score(ged_grade)
     conversion_score: Decimal = await _calculate_ged_conversion_score(
         ged_grade,
-        classification.lower(),
+        classification.apply_type.lower()
     )
     final_score: Decimal = (
         attendance_score + volunteer_score + conversion_score
@@ -198,12 +200,13 @@ async def _calculate_ged_conversion_score(
 async def _get_classification_for_grade_calculation(
     email,
     repository: ClassificationRepositoryInterface
-) -> str:
-    classification = await get_applicant_classification(
-        email, repository
+) -> Classification:
+    classification = from_dict(
+        data_class=Classification,
+        data=await repository.get_one(email)
     )
 
-    return classification['apply_type']
+    return classification
 
 
 async def upsert_ged_applicant_grade(
@@ -231,3 +234,117 @@ async def get_academic_grade(
     )
 
     return to_dict(academic_grade)
+
+
+async def _patch_academic_grade(
+    email: str,
+    repository: AcademicGradeRepositoryInterface,
+    target: Dict[str, Any]
+) -> AcademicGrade:
+    try:
+        academic_grade = from_dict(
+            data_class=AcademicGrade, data=target, decimal_auto_convert=True
+        )
+    except (MissingValueError, WrongTypeError):
+        raise WrongAcademicGradeDataException
+
+    await repository.patch(email, to_dict(academic_grade))
+
+    return from_dict(
+        data_class=AcademicGrade, data=await repository.get(email)
+    )
+
+
+async def _update_applicant_final_grade(
+    academic_grade: AcademicGrade,
+    grade_repository: GradeRepositoryInterface,
+    classification_repository: ClassificationRepositoryInterface,
+    email: str
+) -> None:
+    classification = await _get_classification_for_grade_calculation(
+        email, classification_repository
+    )
+
+    grade = from_dict(
+        data_class=Grade,
+        data=await grade_repository.get_one(email)
+    )
+
+    attendance_score: int = grade.attendance_score
+    volunteer_score: Decimal = grade.volunteer_score
+    conversion_score: Decimal = await _get_applicant_conversion_score(
+        academic_grade,
+        classification
+    )
+
+    final_score: Decimal = (
+        attendance_score + volunteer_score + conversion_score
+    )
+
+    final_grade = from_dict(data_class=Grade, data={
+        'conversion_score': conversion_score,
+        'final_score': final_score,
+    })
+
+    await grade_repository.patch(email, to_dict(final_grade))
+
+
+async def _get_applicant_conversion_score(
+    academic_grade: AcademicGrade,
+    classification: Classification
+) -> Decimal:
+    if classification.apply_type == ALLOWABLE_APPLY_TYPES[0]:
+        conversion_score = await _calculate_common_type_conversion_score(
+            academic_grade, classification.is_graduated
+        )
+    else:
+        conversion_score = await _calculate_no_common_type_conversion_score(
+            academic_grade, classification.is_graduated
+        )
+
+    return conversion_score
+
+
+async def _calculate_common_type_conversion_score(
+    academic_grade: AcademicGrade,
+    is_graduated: bool
+) -> Decimal:
+    # if is_graduated:
+    #     conversion_score
+    # else:
+    #     conversion_score
+    #
+    # return conversion_score
+    pass
+
+
+async def _calculate_no_common_type_conversion_score(
+    academic_grade: AcademicGrade,
+    is_graduated: bool
+) -> Decimal:
+    # if is_graduated:
+    #     conversion_score
+    # else:
+    #     conversion_score
+    #
+    # return conversion_score
+    pass
+
+
+async def upsert_academic_grade(
+    email: str,
+    academic_repository: AcademicGradeRepositoryInterface,
+    grade_repository: GradeRepositoryInterface,
+    classification_repository: ClassificationRepositoryInterface,
+    target: Dict[str, Any]
+) -> None:
+    academic_grade = await _patch_academic_grade(
+        email, academic_repository, target
+    )
+
+    await _update_applicant_final_grade(
+        academic_grade,
+        grade_repository,
+        classification_repository,
+        email
+    )
