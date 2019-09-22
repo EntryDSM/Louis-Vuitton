@@ -17,12 +17,6 @@ from lv.exceptions.service import (
 )
 
 
-def as_response(
-        data: Union[List[Dict, str], Dict[str, Any]]
-) -> Dict[str, Any]:
-    return {'data': data}
-
-
 def check_submit_status(original_function):
     @wraps(original_function)
     async def decorated_function(request: Request, *args, **kwargs):
